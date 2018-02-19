@@ -1,16 +1,16 @@
-import os
 from pathlib import Path
 
 
-APP_NAME = "tasks"
+DEFUALT_APP_NAME = "tasks"
 
 
 class Filesystem:
-    def __init__(self, prefix=None):
+    """Create directories and files for application."""
+
+    def __init__(self, prefix=None, app_name=None):
         self.prefix = prefix if prefix else Path.home()
-        p = self.app_dir_path()
-        p.mkdir(exist_ok=True)
+        self.app_name = app_name if app_name else DEFUALT_APP_NAME
+        self.app_dir_path().mkdir(exist_ok=True)
 
     def app_dir_path(self):
-        dir_name = '.' + APP_NAME
-        return self.prefix / Path("." + APP_NAME)
+        return self.prefix / Path("." + self.app_name)
