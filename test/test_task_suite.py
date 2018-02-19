@@ -1,6 +1,7 @@
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 from tasks.tasks_suite import TasksSuite
+
 
 class TestTaskSuite(unittest.TestCase):
     def setUp(self):
@@ -26,3 +27,10 @@ class TestTaskSuite(unittest.TestCase):
         # '3' is index
         self.t1.pop(3)
         self.assertEqual(self.t1, self.t2)
+
+    def test_shift_forward(self):
+        minutes = 1
+        self.t1.shift(minutes)
+        self.assertNotEqual(self.t1.start, self.t2.start)
+        self.assertEqual(self.t1.start, self.t2.start
+                                        + timedelta(minutes=minutes))

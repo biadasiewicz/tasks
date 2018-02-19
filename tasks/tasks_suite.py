@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class TasksSuite:
@@ -27,3 +27,6 @@ class TasksSuite:
 
     def pop(self, index):
         self._tasks.pop(index)
+
+    def shift(self, minutes):
+        self._start = self._start + timedelta(minutes=minutes)
