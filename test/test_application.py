@@ -16,6 +16,7 @@ class TestApplication(unittest.TestCase):
         self.app = Application(self.fs)
         self.tasks_suite = TasksSuite()
         self.tasks = [Task("1"), Task("2"), Task("3")]
+        self.tasks_suite.extend(self.tasks)
 
     def tearDown(self):
         shutil.rmtree(self.tempdir)
@@ -43,7 +44,6 @@ class TestApplication(unittest.TestCase):
             self.app.stop_tasks_suite()
 
     def test_show_status(self):
-        self.tasks_suite.extend(self.tasks)
         self.app.start_tasks_suite(self.tasks_suite)
         output = self.app.show_status()
         for t in self.tasks:
