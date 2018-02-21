@@ -48,3 +48,23 @@ class TestCLI(unittest.TestCase):
         self.cli.execute(args)
         output = self.stream.getvalue()
         self.assertIn(str(self.task), output)
+
+    def test_start(self):
+        self.cli.start()
+        output = self.stream.getvalue()
+        self.assertEqual(len(output), 0)
+
+    def test_already_started(self):
+        self.app.start_tasks_suite(self.tasks_suite)
+        self.cli.start()
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["already_started"], output)
+
+    def test_execute_start(self):
+        args = ["", "start"]
+        self.cli.execute(args)
+        output = self.stream.getvalue()
+        self.assertEqual(len(output), 0)
+        self.cli.execute(args)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["already_started"], output)
