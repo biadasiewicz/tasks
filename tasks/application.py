@@ -39,3 +39,10 @@ class Application:
         else:
             with open(self.fs.tasks_suite_path(), 'rb') as f:
                 return pickle.load(f)
+
+    def show_status(self):
+        try:
+            ts = self.load_tasks_suite()
+            return str(ts)
+        except TasksSuiteNotActive:
+            return None

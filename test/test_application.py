@@ -41,3 +41,15 @@ class TestApplication(unittest.TestCase):
         self.assertFalse(self.app.is_tasks_suite_active())
         with self.assertRaises(TasksSuiteNotActive):
             self.app.stop_tasks_suite()
+
+    def test_show_status(self):
+        self.tasks_suite.extend(self.tasks)
+        self.app.start_tasks_suite(self.tasks_suite)
+        output = self.app.show_status()
+        for t in self.tasks:
+            self.assertIn(str(t), output)
+
+    def test_show_status_not_active_tests_suite(self):
+        self.assertFalse(self.app.is_tasks_suite_active())
+        output = self.app.show_status()
+        self.assertIs(output, None)
