@@ -2,7 +2,9 @@ import unittest
 import tempfile
 import shutil
 from tasks.filesystem import Filesystem
-from tasks.application import Application, TasksSuiteAlreadyActive
+from tasks.application import Application,\
+                              TasksSuiteAlreadyActive,\
+                              TasksSuiteNotActive
 from tasks.tasks_suite import TasksSuite
 from tasks.task import Task
 
@@ -27,3 +29,15 @@ class TestApplication(unittest.TestCase):
         self.app.start_tasks_suite(self.tasks_suite)
         with self.assertRaises(TasksSuiteAlreadyActive):
             self.app.start_tasks_suite(self.tasks_suite)
+
+    def test_stop_tasks_suite(self):
+        self.app.start_tasks_suite(self.tasks_suite)
+        self.assertTrue(self.app.is_tasks_suite_active())
+        stopped_tasks_suite = self.app.stop_tasks_suite()
+        self.assertFalse(self.app.is_tasks_suite_active())
+        self.assertEqual(self.tasks_suite, stopped_tasks_suite)
+
+    def test_stopping_not_active_tasks_suite(self):
+        self.assertFalse(self.app.is_tasks_suite_active())
+        with self.assertRaises(TasksSuiteNotActive):
+            self.app.stop_tasks_suite()
