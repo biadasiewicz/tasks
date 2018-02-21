@@ -1,5 +1,6 @@
 import pickle
 import os
+from datetime import timedelta
 from .filesystem import Filesystem
 
 
@@ -46,3 +47,8 @@ class Application:
             return str(ts)
         except TasksSuiteNotActive:
             return None
+
+    def shift_tasks_suite_in_time(self, minutes):
+        ts = self.stop_tasks_suite()
+        ts.start = ts.start + timedelta(minutes=minutes)
+        self.start_tasks_suite(ts)

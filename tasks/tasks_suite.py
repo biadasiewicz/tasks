@@ -19,6 +19,10 @@ class TasksSuite:
     def start(self):
         return self._start
 
+    @start.setter
+    def start(self, value):
+        self._start = value
+
     def append(self, task):
         self._tasks.append(task)
 

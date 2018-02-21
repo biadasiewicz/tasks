@@ -53,3 +53,20 @@ class TestApplication(unittest.TestCase):
         self.assertFalse(self.app.is_tasks_suite_active())
         output = self.app.show_status()
         self.assertIs(output, None)
+
+    def shift_tasks_suite(self, minutes):
+        self.app.start_tasks_suite(self.tasks_suite)
+        self.app.shift_tasks_suite_in_time(minutes)
+        self.shifted_tasks_suite = self.app.load_tasks_suite()
+
+    def test_shift_tasks_suite_in_time_forward(self):
+        minutes = 1
+        self.shift_tasks_suite(minutes)
+        self.assertLess(self.tasks_suite.start,
+                        self.shifted_tasks_suite.start)
+
+    def test_shift_tasks_suite_in_time_backward(self):
+        minutes = -1
+        self.shift_tasks_suite(minutes)
+        self.assertGreater(self.tasks_suite.start,
+                           self.shifted_tasks_suite.start)
