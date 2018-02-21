@@ -1,7 +1,7 @@
 import unittest
 import tempfile
 import shutil
-from tasks.filesystem import Filesystem
+from tasks.filesystem import Filesystem, TASKS_SUITE_FILENAME
 
 
 class TestFilesystem(unittest.TestCase):
@@ -18,3 +18,6 @@ class TestFilesystem(unittest.TestCase):
 
         self.assertIn(self.tempdir, self.fs.prefix)
         self.assertIn(self.app_name, self.fs.app_name)
+
+    def test_tasks_suite_path(self):
+        self.assertIn(TASKS_SUITE_FILENAME, str(self.fs.tasks_suite_path()))
