@@ -10,7 +10,7 @@ class TasksSuite:
         return self._tasks == x._tasks and self._start == x._start
 
     def __str__(self):
-        s = self._start.strftime("start: %H:%M")
+        s = self._start.strftime("%H:%M: start")
         minutes = 0
         for t in self._tasks:
             minutes += t.minutes
