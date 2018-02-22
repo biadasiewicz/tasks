@@ -116,3 +116,66 @@ class TestCLI(unittest.TestCase):
         self.cli.status()
         output = self.stream.getvalue()
         self.assertIn(str(task), output)
+
+    def test_remove(self):
+        self.app.start_tasks_suite(self.tasks_suite)
+        self.cli.remove(1)
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertNotIn(str(self.task), output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_remove_on_not_active_tasks_suite(self):
+        self.cli.remove(1)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["no_tasks"], output)
+        self.assertFalse(self.app.is_tasks_suite_active())
+
+    def test_remove_invalid_index(self):
+        self.app.start_tasks_suite(self.tasks_suite)
+        invalid_index = 999
+        self.cli.remove(invalid_index)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["index_err"], output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+        invalid_index = 0
+        self.cli.remove(invalid_index)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["index_err"], output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_execute_remove(self):
+        index = "1"
+        ts = self.tasks_suite
+        args = ["", "remove", index]
+        self.app.start_tasks_suite(ts)
+        self.cli.execute(args)
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertNotIn(str(ts), output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_execute_remove_on_not_active_tasks_suite(self):
+        args = ["", "remove", "1"]
+        self.assertFalse(self.app.is_tasks_suite_active())
+        self.cli.execute(args)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["no_tasks"], output)
+        self.assertFalse(self.app.is_tasks_suite_active())
+
+    def test_execute_remove_invalid_index(self):
+        self.app.start_tasks_suite(self.tasks_suite)
+        invalid_index = "999"
+        args = ["", "remove", invalid_index]
+        self.cli.execute(args)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["index_err"], output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_execute_remove_invalid_index_format(self):
+        args = ["", "remove", "xxx"]
+        self.app.start_tasks_suite(self.tasks_suite)
+        self.cli.execute(args)
+        output = self.stream.getvalue()
+        self.assertTrue(self.app.is_tasks_suite_active())
