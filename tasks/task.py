@@ -10,3 +10,6 @@ class Task:
 
     def __str__(self):
         return str(self.minutes) + ": " + self.description
+
+    def __eq__(self, x):
+        return self.minutes == x.minutes and self.description == x.description

@@ -32,5 +32,5 @@ class TestTaskSuite(unittest.TestCase):
         minutes = 1
         self.t1.shift(minutes)
         self.assertNotEqual(self.t1.start, self.t2.start)
-        self.assertEqual(self.t1.start, self.t2.start
-                                        + timedelta(minutes=minutes))
+        self.assertEqual(self.t1.start, self.t2.start + timedelta(
+                                                        minutes=minutes))
