@@ -90,3 +90,29 @@ class TestCLI(unittest.TestCase):
         self.cli.execute(args)
         output = self.stream.getvalue()
         self.assertIn(CLI.msg["stopped"], output)
+
+    def test_add(self):
+        self.app.start_tasks_suite(self.tasks_suite)
+        task = Task(1, "task")
+        self.cli.add(task)
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertIn(str(task), output)
+
+    def test_add_to_not_active_tasks_suite(self):
+        task = Task(1, "task")
+        self.cli.add(task)
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertIn(str(task), output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_execute_add(self):
+        minutes = 1
+        description = "task"
+        task = Task(minutes, description)
+        args = ["", "add", str(minutes), description]
+        self.cli.execute(args)
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertIn(str(task), output)
