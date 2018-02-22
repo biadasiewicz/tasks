@@ -9,14 +9,14 @@ from .task import Task
 class CLI:
 
     msg = {
-        "too_few_args": "Too few options given",
-        "no_tasks": "There is no active tasks suite",
-        "already_started": "Tasks suite already started",
-        "stopped": "Tasks suite stopped",
-        "index_err": "Index is invalid",
-        "index_format_err": "Index format is invalid",
-        "shift_arg_format_err": "Invalid minutes format",
-        "command_not_found": "Command not found",
+        "too_few_args": "Too few options given.",
+        "no_tasks": "There is no active tasks suite.",
+        "already_started": "Tasks suite already started.",
+        "stopped": "Tasks suite stopped.",
+        "index_err": "Index is invalid.",
+        "index_format_err": "Index format is invalid.",
+        "shift_arg_format_err": "Invalid minutes format.",
+        "command_not_found": "Command not found.",
         }
 
     def __init__(self, app=None, stream=None):
