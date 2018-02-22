@@ -15,6 +15,8 @@ class CLI:
         "stopped": "Tasks suite stopped",
         "index_err": "Index is invalid",
         "index_format_err": "Index format is invalid",
+        "shift_arg_format_err": "Invalid minutes format",
+        "command_not_found": "Command not found",
         }
 
     def __init__(self, app=None, stream=None):
@@ -34,6 +36,10 @@ class CLI:
                 self.add(Task(args[2], args[3]))
             elif command == "remove":
                 self.remove(args[2])
+            elif command == "shift":
+                self.shift(args[2])
+            else:
+                print(self.msg["command_not_found"], file=self.stream)
         except IndexError as e:
             print(self.msg["too_few_args"], file=self.stream)
 
@@ -84,3 +90,14 @@ class CLI:
             print(self.msg["index_err"], file=self.stream)
         finally:
             self.app.start_tasks_suite(ts)
+
+    def shift(self, minutes):
+        try:
+            minutes = int(minutes)
+        except ValueError:
+            print(self.msg["shift_arg_format_err"], file=self.stream)
+            return
+        try:
+            self.app.shift_tasks_suite_in_time(minutes)
+        except TasksSuiteNotActive:
+            print(self.msg["no_tasks"], file=self.stream)

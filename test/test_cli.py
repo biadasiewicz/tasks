@@ -2,6 +2,7 @@ import unittest
 import tempfile
 import shutil
 from io import StringIO
+from datetime import timedelta
 from tasks.cli import CLI
 from tasks.filesystem import Filesystem
 from tasks.application import Application
@@ -29,6 +30,12 @@ class TestCLI(unittest.TestCase):
         self.cli.execute(args)
         output = self.stream.getvalue()
         self.assertIn(CLI.msg["too_few_args"], output)
+
+    def test_execute_command_not_found(self):
+        args = ["", "invalid_command"]
+        self.cli.execute(args)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["command_not_found"], output)
 
     def test_status(self):
         self.cli.status()
@@ -179,3 +186,52 @@ class TestCLI(unittest.TestCase):
         self.cli.execute(args)
         output = self.stream.getvalue()
         self.assertTrue(self.app.is_tasks_suite_active())
+
+    def shift(self, minutes):
+        original_ts = TasksSuite()
+        shifted_ts = TasksSuite(original_ts.start +
+                                timedelta(minutes=minutes))
+        self.app.start_tasks_suite(original_ts)
+        self.cli.shift(minutes)
+        self.assertTrue(self.app.is_tasks_suite_active())
+        output = self.stream.getvalue()
+        self.assertEqual(len(output), 0) # check if no error printed
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertNotIn(str(original_ts), output)
+        self.assertIn(str(shifted_ts), output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_shift(self):
+        self.shift(1)
+
+    def test_shift_backward(self):
+        self.shift(-1)
+
+    def test_shift_on_not_active_tasks_suite(self):
+        self.assertFalse(self.app.is_tasks_suite_active())
+        self.cli.shift(1)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["no_tasks"], output)
+        self.assertFalse(self.app.is_tasks_suite_active())
+
+    def test_shift_invalid_format(self):
+        invalid_format_minutes = "1min"
+        self.app.start_tasks_suite(self.tasks_suite)
+        self.cli.shift(invalid_format_minutes)
+        output = self.stream.getvalue()
+        self.assertIn(CLI.msg["shift_arg_format_err"], output)
+        self.assertTrue(self.app.is_tasks_suite_active())
+
+    def test_execute_shift(self):
+        original_ts = TasksSuite()
+        minutes = "1"
+        shifted_ts = TasksSuite(original_ts.start +
+                                timedelta(minutes=int(minutes)))
+        args = ["", "shift", minutes]
+        self.app.start_tasks_suite(original_ts)
+        self.cli.execute(args)
+        self.cli.status()
+        output = self.stream.getvalue()
+        self.assertNotIn(str(original_ts), output)
+        self.assertIn(str(shifted_ts), output)
