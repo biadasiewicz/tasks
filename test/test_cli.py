@@ -44,7 +44,7 @@ class TestCLI(unittest.TestCase):
         self.app.start_tasks_suite(self.tasks_suite)
         self.cli.status()
         output = self.stream.getvalue()
-        self.assertIn(str(self.task), output)
+        self.assertIn(self.task.description, output)
 
     def test_execute_status(self):
         args = ["", "status"]
@@ -54,7 +54,7 @@ class TestCLI(unittest.TestCase):
         self.app.start_tasks_suite(self.tasks_suite)
         self.cli.execute(args)
         output = self.stream.getvalue()
-        self.assertIn(str(self.task), output)
+        self.assertIn(self.task.description, output)
 
     def test_start(self):
         self.cli.start()
@@ -104,14 +104,14 @@ class TestCLI(unittest.TestCase):
         self.cli.add(task)
         self.cli.status()
         output = self.stream.getvalue()
-        self.assertIn(str(task), output)
+        self.assertIn(task.description, output)
 
     def test_add_to_not_active_tasks_suite(self):
         task = Task(1, "task")
         self.cli.add(task)
         self.cli.status()
         output = self.stream.getvalue()
-        self.assertIn(str(task), output)
+        self.assertIn(task.description, output)
         self.assertTrue(self.app.is_tasks_suite_active())
 
     def test_execute_add(self):
@@ -122,7 +122,7 @@ class TestCLI(unittest.TestCase):
         self.cli.execute(args)
         self.cli.status()
         output = self.stream.getvalue()
-        self.assertIn(str(task), output)
+        self.assertIn(task.description, output)
 
     def test_remove(self):
         self.app.start_tasks_suite(self.tasks_suite)

@@ -33,15 +33,17 @@ class CLI:
             elif command == "stop":
                 self.stop()
             elif command == "add":
-                self.add(Task(args[2], args[3]))
+                self.add(Task(int(args[2]), args[3]))
             elif command == "remove":
                 self.remove(args[2])
             elif command == "shift":
                 self.shift(args[2])
             else:
                 print(self.msg["command_not_found"], file=self.stream)
-        except IndexError as e:
+        except IndexError:
             print(self.msg["too_few_args"], file=self.stream)
+        except ValueError:
+            print(self.msg["shift_arg_format_err"], file=self.stream)
 
     def status(self):
         output = self.app.show_status()

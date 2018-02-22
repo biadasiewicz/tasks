@@ -10,9 +10,12 @@ class TasksSuite:
         return self._tasks == x._tasks and self._start == x._start
 
     def __str__(self):
-        s = self._start.strftime("start: %H:%M\n")
+        s = self._start.strftime("start: %H:%M")
+        minutes = 0
         for t in self._tasks:
-            s += str(t) + '\n'
+            minutes += t.minutes
+            end_time = self.start + timedelta(minutes=minutes)
+            s += '\n' + end_time.strftime("%H:%M: ") + t.description
         return s
 
     @property

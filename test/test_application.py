@@ -15,7 +15,7 @@ class TestApplication(unittest.TestCase):
         self.fs = Filesystem(prefix=self.tempdir)
         self.app = Application(self.fs)
         self.tasks_suite = TasksSuite()
-        self.tasks = [Task("1"), Task("2"), Task("3")]
+        self.tasks = [Task(1, "1"), Task(2, "2"), Task(3, "3")]
         self.tasks_suite.extend(self.tasks)
 
     def tearDown(self):
@@ -47,7 +47,7 @@ class TestApplication(unittest.TestCase):
         self.app.start_tasks_suite(self.tasks_suite)
         output = self.app.show_status()
         for t in self.tasks:
-            self.assertIn(str(t), output)
+            self.assertIn(t.description, output)
 
     def test_show_status_not_active_tests_suite(self):
         self.assertFalse(self.app.is_tasks_suite_active())
